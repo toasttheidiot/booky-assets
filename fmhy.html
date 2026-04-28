@@ -1,0 +1,39 @@
+Dont allow popups and redirects on this page or else it wont work
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>freemediaheckyeah</title>
+    <link id="pageIcon" rel="icon" href="https://fmhy.net/favicon.ico">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="myFrame" src=""></iframe>
+
+    <script>
+
+        const targetURL = 'https://fmhy.xyz';
+
+        document.getElementById('myFrame').src = targetURL;
+    </script>
+
+</body>
+</html>
