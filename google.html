@@ -1,29 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Google</title>
-<style>
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-}
-iframe {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    border: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #frame_container {
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-<iframe src="https://google.com/search?igu=1" allowfullscreen></iframe>
+
+    <div id="frame_container">
+        <iframe 
+            src="https://google.com?igu=1" 
+            name="google_frame" 
+            id="google_frame">
+        </iframe>
+    </div>
+
+    <script>
+        const container = document.getElementById('frame_container');
+        let iframe = document.getElementById('google_frame');
+        let currentSrc = iframe.getAttribute('src');
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                    const newSrc = iframe.getAttribute('src');
+                    
+                    if (newSrc === currentSrc) return;
+
+                    observer.disconnect();
+
+                    const userConfirmed = confirm("Are you sure you want to redirect to " + newSrc + "?");
+
+                    if (userConfirmed) {
+                        currentSrc = newSrc;
+                        iframe.remove();
+
+                        const newIframe = document.createElement('iframe');
+                        newIframe.id = 'google_frame';
+                        newIframe.name = 'google_frame';
+                        newIframe.src = newSrc;
+
+                        container.appendChild(newIframe);
+                        iframe = newIframe;
+                    } else {
+                        iframe.setAttribute('src', currentSrc);
+                    }
+
+                    observer.observe(iframe, { attributes: true });
+                }
+            });
+        });
+
+        observer.observe(iframe, { attributes: true });
+    </script>
+
 </body>
 </html>
